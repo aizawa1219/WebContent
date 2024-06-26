@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $('#btn').on('click',function(){
+		$("#q20").empty(); //子要素の削除
+    });
+  });
+  </script>
+  <body>
+	<button id="btn">クリック</button>
+	<ul id="q20">
+	  <li>前田敦子</li>
+	  <li>大島優子</li>
+	  <li>篠田麻里子</li>
+	</ul>
+
+  </body>
+</html>

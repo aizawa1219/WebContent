@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $('#btn').on('click',function(){
+      $("#q05").html("<strong>大島優子</strong>"); //置き換え
+	  //$("#q05").append("<strong>大島優子</strong>"); //これは大島優子が追加される
+    });
+  });
+  </script>
+  <body>
+	<button id="btn">クリック</button>
+	<p id="q05">前田敦子</p>
+  </body>
+</html>

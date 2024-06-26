@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+// 配列の中身を表示する
+var Person = function(name, age) {
+  this.name = name;
+  this.age = age;
+};
+var data = [
+  new Person("yamada",25),
+  new Person("sato",26),
+  new Person("suzuki",21),
+  new Person("yamamoto",25),
+];
+
+console.log(data);
+
+data.forEach(d => console.log(d.name + ' : ' + d.age));
+
+for (const d of data) {
+	console.log(d);
+	console.log(d.name + ' : ' + d.age);
+}
+
+for (key in data){
+	console.log(key);
+}
+
+var key = [];
+for (i=0; i < data.length; i++) {
+	for (Key in data[i]) {
+		key.push(Key);
+	}
+	console.log(data[i][key[0]] + ' : ' + data[i][key[1]]);
+	
+	key = [];
+}	
+
+for (i=0; i < data.length; i++){
+	console.log(data[i].name + " : " + data[i].age);
+}
+
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+// フォームの各入力値を取得する
+function display() {
+	var info = [];
+	info[0] = (document.getElementById("name")).value;
+	info[1] = (document.getElementById("age")).value;
+	info[2] = (document.getElementById("hobby")).value;
+	console.log(info);
+	
+	var columns = [];
+	columns[0] = (document.getElementById("na")).innerText;
+	columns[1] = (document.getElementById("ag")).innerText;
+	columns[2] = (document.getElementById("ho")).innerText;
+	console.log(columns);
+	
+	var message = "";
+	for(i=0; i < info.length; i++) {
+		message += columns[i] + ":" + info[i];
+		message += "<br>"
+	}
+	document.getElementById("target").innerHTML = message;
+	
+}
+</script>
+</head>
+<body>
+<table border="1">
+<tr><th id="na">名前</th><td><input type="text" id="name" /></td></tr>
+<tr><th id="ag">年齢</th><td><input type="text" id="age" /></td></tr>
+<tr><th id="ho">趣味</th><td><input type="text" id="hobby" /></td></tr>
+</table>
+<div><input type="button" id="start" value="スタート" onclick="display()" /></div>  
+<div id="target"></div>
+</body>
+</html>

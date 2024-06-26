@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $('#btn').on('click',function(){
+      var word = $("#q02");
+	  word.css("color", "red");
+	  word.css("background-color", "yellow");
+    });
+  });
+  </script>
+  <body>
+	<button id="btn">クリック</button>
+	<p id="q02">ヘビーローテーション</p>
+  </body>
+</html>

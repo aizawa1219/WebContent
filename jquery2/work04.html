@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+	var li_tags = $("ul > li"); //liタグ要素の指定、抽出。セレクタで指定。
+	li_tags.on("click", function() {
+		var rank = li_tags.index(this) + 1;
+		$("#q34").html("クリックしたのは"+ rank + "番目");
+	})
+  });
+  </script>
+  <body>
+	<ul class="kami7">
+      <li>前田敦子</li>
+      <li>大島優子</li>
+      <li>篠田麻里子</li>
+      <li>板野友美</li>
+      <li>渡辺麻友</li>
+      <li>高橋みなみ</li>
+      <li>小嶋陽菜</li>
+    </ul>
+    <p id="q34"></p>
+  </body>
+</html>

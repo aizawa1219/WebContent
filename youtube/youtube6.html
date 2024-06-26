@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Youtube</title>
+    <link rel="stylesheet" href="http://no1s.biz/kenshu/bootstrap/bootstrap-3.3.4/css/bootstrap.css">
+    <link rel="stylesheet" href="http://no1s.biz/kenshu/bootstrap/bootstrap-3.3.4/css/bootstrap-theme.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://no1s.biz/kenshu/bootstrap/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script>
+    var apiKey = 'AIzaSyB5mSNY37Nnwo2AEqk8HQmQgA8DFIxxHzY'; // 自分のapiKeyを入れる
+    var videoId;
+    var googleApiClientReady = function(){
+        init();
+    }
+    var init = function() {
+        $('#btn').attr('disabled', false);
+    }
+    var search = function(keyword){
+        gapi.client.setApiKey(apiKey);
+        gapi.client.load('youtube', 'v3', function() {
+        });
+        var request = gapi.client.request({
+            'path': '/youtube/v3/search',
+            'params': {
+                'q': keyword,  //検索キーワード
+                'type': 'video',
+                'part': 'snippet',
+            }
+        });
+		//requestをexecuteで実行。結果は引数のdataの中に入る。ここからが非同期通信。
+        request.execute(function(data) { //複数のデータが入っている。5つくらい。
+            console.log(data);
+            if (!data.items) return;
+            $('#main').text(''); //text()テキストの追加
+            for(var i in data.items){ //dataは連想配列の形で入っている．iにキーが入る．
+                if(data.items[i].id.videoId &&  //videoIdが存在しているかどうかのチェック
+                   data.items[i].id.kind=="youtube#video"){ //kind:リソースの種類の確認
+                    videoId = data.items[i].id.videoId; //videoIDは動画を識別するyoutube動画ID
+					//以下movieのURL
+                    movie = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + data.items[i].id.videoId + '" frameborder="0"></iframe>';
+                    //YouTube動画の埋め込み
+					$('#main').append(
+                        '<div id="movie_title">' +  //動画タイトル
+                        '<a href="https://www.youtube.com/watch?v=' + data.items[i].id.videoId + '" target="_blank">' + data.items[i].snippet.title + '</a>' + 
+                        '</div>' + 
+                        movie +  //メイン動画
+                        '<div id="movie_description">' + data.items[i].snippet.description + '</div>');//動画詳細
+                }
+                break; //if文を通ったものがあれば、for文は終了。
+            }
+            console.log(videoId);
+            search_related(keyword,videoId);
+        });
+    }
+    var search_related = function(keyword, videoId){
+		//APIキーの設定
+        gapi.client.setApiKey(apiKey);
+		//第1引数にはAPI名、第2引数にはAPIのバージョン、第3引数にはAPIロード後に実行されるコールバック関数を指定
+        gapi.client.load('youtube', 'v3', function() {
+        });
+        var request = gapi.client.request({
+            'path': '/youtube/v3/search',
+            'params': {
+                'q': keyword,
+                'type': 'video',
+                //'relatedToVideoId': videoId,
+                'maxResults': 3,
+                'part': 'snippet',
+            }
+        });
+		//10個の動画を取得
+		var playlist = [ ];
+        request.execute(function(data) {
+            $('#related').text('');
+            $('#related').append('<table>');
+            for(var i in data.items){
+                if(data.items[i].id.videoId && 
+                   data.items[i].id.videoId != videoId && 
+                   data.items[i].id.kind=="youtube#video"){
+					playlist.push(data.items[i].id.videoId); //プレイリストの作成
+                    $('#related table').append(
+                        '<tr class="movie_box">' + 
+                        '<td class="thum">' + 
+                        '<a href="https://www.youtube.com/watch?v=' + data.items[i].id.videoId + '" target="_blank">' +
+                        '<img src="' + data.items[i].snippet.thumbnails.default.url + '"/>' +
+                        '</a>' +
+                        '</td>' +
+                        '<td class="details">' + data.items[i].snippet.title + '<br />' + 
+                        '<span class="description">' + '' + '</span>' +
+                        '</td>'+ 
+                        '</tr>');
+                }
+            }
+			console.log("プレイリスト : "+ playlist);
+            $('#loading').fadeOut();
+            $('#main_box').show();
+        });
+    };
+    $(function(){
+        $('#main_box').hide(); //非表示にする
+        $('form').submit(function(){
+            var keyword = $('#keyword').val();
+            $('#loading').fadeIn();
+            search(keyword);
+            return false;
+        });
+    });
+    </script>
+    <style>
+    html, body{
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    #container{
+        background-color: #f1f1f1;
+    }
+    #header{
+        padding: 20px;
+        background-color: #fff;
+    }
+    #header form{
+        width: 1200px;
+        margin: 0 auto;
+    }
+    #loading{
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        background: url(http://no1s.biz/kenshu/image/loader.gif) no-repeat center center #ccc;
+        opacity: 0.5;
+        z-index: 9999;
+    }
+    #main_box{
+        margin: 0 auto;
+        width: 1200px;
+    }
+    #main{
+        width: 600px;
+        background-color: #fff;
+        margin-top: 20px;
+        padding: 20px;
+    }
+    #movie_title{
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+    #movie_description{
+        font-size: 1em;
+        margin: 20px 0;
+    }
+    #related{
+        background-color: #f1f1f1;
+        margin-top: 20px;
+        padding-left: 50px;
+        width: 500px;
+    }
+    #related table{
+        background-color: #fff;
+    }
+    #related table tr{
+        border-bottom: 3px solid #f1f1f1;
+    }
+    #related td.thum{
+        padding: 10px 10px 20px 10px;
+    }
+    #related td.details{
+        padding: 10px 10px 20px 0;
+        vertical-align: top;
+    }
+    </style>
+</head>
+<body>
+  <div id="container">
+    <div id="loading"></div>
+    <div id="header">
+      <form>
+        <input type="text" id="keyword" value="AKB48" />
+        <input type="submit" value="検索" id="btn" disabled="disabled" />
+      </form>
+    </div>
+    <div id="main_box" class="clearfix">
+        <div id="main" class="pull-left"></div>
+        <div id="related" class="pull-left"></div>
+    </div>
+  </div>
+  <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
+</body>
+</html>

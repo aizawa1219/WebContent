@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+var myTimer;
+function go(){
+	var number = document.getElementById("count").value;
+	myTimer = setInterval(output, number*1000);
+	
+	function output(){
+		document.getElementById("message").innerHTML = "タイムアップ！";
+		clearInterval(myTimer);
+	}
+}
+
+</script>
+</head>
+<body>
+<input type="text" id="count" value="10" />
+<input type="button" id="start" value="スタート" onclick="go();" />
+<div id="message"></div>
+</body>
+</html>

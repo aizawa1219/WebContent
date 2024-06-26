@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+// 年齢に入力した数値の判定処理
+function judg() {
+	var elm = document.getElementById("age");
+	var age = parseInt(elm.value); //もしintに変換できなかったらNaNが入る。つまり文字列だと言うこと。
+	var message = document.getElementById("result");
+	if(isNaN(age)){
+		message.value = "数値を入力してください";
+	}else if(age >= 20){
+		message.value = "20歳以上です";
+	}else {
+		message.value = "20歳未満です";
+	}
+	
+}
+</script>
+</head>
+<body>
+<table>
+<tr><td>年齢</td><td><input type="text" id="age" /></td></tr>
+<tr><td>結果</td><td><input id="result" /></td></tr>
+<tr><td colspan="2"><input type="button" id="btn" value="実行" onclick="judg();"/></td></tr>
+</table>
+</body>
+</html>

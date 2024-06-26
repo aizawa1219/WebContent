@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+// 半径に基づく円の面積の計算
+function calc() {
+	var rad = document.getElementById("radius").value;
+	var circle = rad * rad * Math.PI;
+	console.log(circle);
+	document.getElementById("area").value = circle;
+}
+
+</script>
+</head>
+<body>
+<table>
+<tr>
+<td>半径</td>
+<td><input type="text" id="radius" /></td>
+<td><input type="button" id="btn" value="計算" onclick="calc();"/></td>
+</tr>
+</table>
+<div>円の面積：<input type="text" id="area" /></div>
+</body>
+</html>

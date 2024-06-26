@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+	$("#q38").on("change", function() {
+		var select = $("option:selected")
+		var value = select.val();
+		var text = select.text();
+		$("#q38_answer").html(value + " : " + text);
+		console.log(select.text());
+	});
+  });
+  </script>
+  <body>
+	<div>
+      <select id="q38">
+        <option value="maeda">前田敦子</option>
+        <option value="oshima">大島優子</option>
+        <option value="watanae">渡辺麻友</option>
+      </select>
+    </div>
+    <div id="q38_answer"></div>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<style>
+#display, #control{
+  text-align: center;
+}
+#image{
+  width: 100px;
+  height: 100px;
+}
+</style>
+<script>
+// ボタンクリックで画像が変わる
+var images = [];
+images[0] = "http://no1s.biz/kenshu/image/weather001.png";
+images[1] = "http://no1s.biz/kenshu/image/weather002.png";
+images[2] = "http://no1s.biz/kenshu/image/weather003.png";
+images[3] = "http://no1s.biz/kenshu/image/weather004.png";
+
+//グローバル変数
+var index = 0;
+
+function next(){
+	index++;
+	if (index > 3){
+		index = 0;
+	}
+	var htmlstr = 	"<img src='" + images[index] +  "' id='image' />";
+	console.log(htmlstr);
+	document.getElementById("display").innerHTML = htmlstr;
+}
+
+function turn(){
+	index--;
+	if (index < 0){
+		index = 3;
+	}
+	var htmlstr = 	"<img src='" + images[index] +  "' id='image' />";
+	console.log(htmlstr);
+	document.getElementById("display").innerHTML = htmlstr;
+}
+
+</script>
+</head>
+<body>
+<div id="display"><img src="http://no1s.biz/kenshu/image/weather001.png" id="image" /></div>
+<div id="control">
+<input type="button" id="prev" value="戻る" onclick="turn();"/>
+<input type="button" id="next" value="次へ" onclick="next();"/>
+</div>
+</body>
+</html>

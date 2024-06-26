@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $('#btn').on('click',function(){
+      $("#q12").prepend("<li>前田敦子</li>"); //先頭に子要素を追加
+	  $("#btn").off("click");//おまけ。2回目以降のクリックは無効。
+    });
+  });
+  </script>
+  <body>
+	<button id="btn">クリック</button>
+	<ul id="q12">
+		<li>大島優子</li>
+	</ul>
+  </body>
+</html>

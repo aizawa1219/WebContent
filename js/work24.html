@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+// プルダウン選択した項目のURLへ遷移する
+var urls = {
+    'yahoo':'http://www.yahoo.co.jp/',
+    'google':'http://www.google.co.jp/',
+    'amazon':'http://www.amazon.co.jp/'
+}
+
+function move(param) {
+	if(param == 'yahoo'){
+		console.log(urls.yahoo);
+		location.href = urls.yahoo;
+	}else if(param == 'google'){
+		location.href = urls.google;
+	}else if(param == 'amazon'){
+		location.href = urls.amazon;
+	}
+	//console.log(param);
+	//console.log(urls.yahoo);
+	//location.href=urls.param;
+}
+
+//function slide() {
+	//var select = document.getElementById("url");
+	//console.log(select.value);
+	//move(select.value);
+//}
+
+function acquire() {
+	var select = document.getElementById("url");
+	//console.log(select.value);
+	//param = select.value;
+	move(select.value);
+}
+
+
+</script>
+</head>
+<body>
+<div>
+<select id="url">
+<option value="">選択してください</option>
+<option value="yahoo" onclick="yahoo();">Yahoo</option>
+<option value="google">Google</option>
+<option value="amazon">Amazon</option>
+</select>
+<input type="button" id="btn" value="移動" onclick="acquire();" />
+</div>
+</body>
+</html>

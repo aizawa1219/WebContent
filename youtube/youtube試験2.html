@@ -1,0 +1,367 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Youtube</title>
+    <link rel="stylesheet" href="http://no1s.biz/kenshu/bootstrap/bootstrap-3.3.4/css/bootstrap.css">
+    <link rel="stylesheet" href="http://no1s.biz/kenshu/bootstrap/bootstrap-3.3.4/css/bootstrap-theme.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://no1s.biz/kenshu/bootstrap/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script>
+    var apiKey = 'AIzaSyB5mSNY37Nnwo2AEqk8HQmQgA8DFIxxHzY'; // 自分のapiKeyを入れる
+    var videoId;
+	var playlist = []; //動画のプレイリスト
+	var playertd = []; //動画タイトル、説明の一時保存
+	var playerinfo = []; //動画のタイトル、説明の情報を入れる
+	var number = 0; //クリックした曲のインデックス
+	// 現在再生中の曲のインデックス
+	var current = 0;
+	
+    var googleApiClientReady = function(){
+        init();
+    }
+    var init = function() {
+        $('#btn').attr('disabled', false);
+    }
+	
+	let playerReadyFlg = false;
+	let playListAddFlg = false;
+	let playListFlg = false;
+	
+	// 次を再生
+    function playNext() {
+		// プレイリストの次を再生。最後まで到達したら先頭のビデオを再生
+		if(playerReadyFlg == false){
+			current = -1;
+			playerReadyFlg = true;
+		}
+		var veid = playlist[current];
+		$('tr[name='+veid+']').toggleClass("highlight");
+        current++;
+        if(current >= playlist.length){
+            current = 0;
+        }
+        player.loadVideoById(playlist[current]); //指定された動画を読み込んで再生
+		var vid = playlist[current];
+		$('tr[name='+vid+']').toggleClass("highlight");
+		
+		$("#movie_title").html(playerinfo[current][0]);
+		$("#movie_description").html(playerinfo[current][1]);
+    }
+	// 戻る
+    function playPrev(){
+		if(playerReadyFlg == false){
+			current = -1;
+			playerReadyFlg = true;
+		}
+		var veid = playlist[current];
+		$('tr[name='+veid+']').toggleClass("highlight");
+        current--;
+        if(current < 0){
+            current = playlist.length-1;
+        }
+        player.loadVideoById(playlist[current]); //指定された動画を読み込んで再生
+		var vid = playlist[current];
+		$('tr[name='+vid+']').toggleClass("highlight");
+		
+		$("#movie_title").html(playerinfo[current][0]);
+		$("#movie_description").html(playerinfo[current][1]);
+		
+		
+    }
+	// 再生と停止
+    function exe(){
+		//getPlayerStateはプレイヤーの状態を表している。YT.PlayerState.PLAYINGは再生中。
+        if(player.getPlayerState() == YT.PlayerState.PLAYING){
+            player.pauseVideo(); //再生中の動画を一時停止
+        } else {
+            player.playVideo(); //頭出し済み、または読み込み済みの動画を再生
+        }
+    }
+	//クリック再生
+	function playClick(){
+		if(playerReadyFlg == false){
+			current = -1;
+			playerReadyFlg = true;
+		}
+		var veid = playlist[current];
+		$('tr[name='+veid+']').toggleClass("highlight");
+		current = number;
+		player.loadVideoById(playlist[current]); //指定された動画を読み込んで再生
+		var vid = playlist[current];
+		$('tr[name='+vid+']').toggleClass("highlight");
+		
+		$("#movie_title").html(playerinfo[current][0]);
+		$("#movie_description").html(playerinfo[current][1]);
+	}
+	//検索リクエストsearch
+    var search = function(keyword){
+        gapi.client.setApiKey(apiKey);
+        gapi.client.load('youtube', 'v3', function() {
+        });
+        var request = gapi.client.request({
+            'path': '/youtube/v3/search',
+            'params': {
+                'q': keyword,  //検索キーワード
+                'type': 'video',
+				'maxResults': 3,
+                'part': 'snippet',
+            }
+        });
+		// IFrame Player APIを非同期にロード
+	    var tag = document.createElement('script');
+	    tag.src = 'http://www.youtube.com/player_api';
+	    var firstScriptTag = document.getElementsByTagName('script')[0];
+	    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+		var player;
+		//requestをexecuteで実行。結果は引数のdataの中に入る。ここからが非同期通信。
+        request.execute(function(data) { //複数のデータが入っている。5つくらい。
+            console.log(data);
+            if (!data.items) return;
+			$('#related').text(''); //再生リストの画面枠を空にする
+		    $('#related').append('<table>');
+            //$('#main_movie').text(''); //動画表示する枠の中身を空にする
+            for(var i in data.items){ //dataは連想配列の形で入っている．iにキーが入る．
+                if(data.items[i].id.videoId &&  //videoIdが存在しているかどうかのチェック
+                   data.items[i].id.kind=="youtube#video"){ //kind:リソースの種類の確認
+                    videoId = data.items[i].id.videoId; //videoIDは動画を識別するyoutube動画ID	
+					console.log('playlist added' + data.items[i].id.videoId);
+					$('#related table').append(
+                        '<tr  class="movie_box" name=' + data.items[i].id.videoId + ' >' + 
+                        '<td class="thum">' + 
+                        //'<a href="https://www.youtube.com/watch?v=' + data.items[i].id.videoId + '" target="_blank">' +
+                        '<img name=' + data.items[i].id.videoId + ' src="' + data.items[i].snippet.thumbnails.default.url + '"  />' + //サムネ画像を取得している
+                        //'</a>' +
+                        '</td>' +
+						//動画のタイトル
+                        '<td class="details" name=' + data.items[i].id.videoId + ' >' + data.items[i].snippet.title + '<br />' + 
+                        '<span class="description">' + '' + '</span>' +
+                        '</td>'+ 
+                        '</tr>');
+					
+					playlist.push(data.items[i].id.videoId);
+					playertd.push(data.items[i].snippet.title, data.items[i].snippet.description);
+					playerinfo.push(playertd); //二次元配列
+					playertd = [];
+                }
+                //break; //if文を通ったものがあれば、for文は終了。
+            }
+            console.log("プレイリスト : " + playlist);
+			playListAddFlg = true;
+			playerStart();
+            //search_related(keyword,videoId); //非同期通信
+			if(playListAddFlg && playerReadyFlg){
+				var fid = playlist[current];
+				$('tr[name='+fid+']').toggleClass("highlight"); //現在再生中のリストを赤くハイライト
+			}
+			$('#loading').fadeOut();
+			$('#main_box').show();
+        });
+    }
+	//動画再生
+	function onYouTubePlayerAPIReady() {
+		playerReadyFlg = true;
+	    playerStart();
+		console.log('onYoutubePlayerAPIReady');
+	}
+	
+	//playlistとonYoutubePlayerAPIReadyの両方が準備可能になってからplayerをonYouTubePlayerAPIReadyに埋め込む
+	//そうでないと、エラーが発生し、次の動画に移ってしまう
+	function playerStart() {
+		if (playListAddFlg && playerReadyFlg) {
+			player = new YT.Player('main_movie', {
+				        height: '390',
+				        width: '600',
+						//frameborder: '0',
+				        videoId: playlist[current],
+				        events: {
+				            'onReady': onPlayerReady,
+				            'onStateChange': onPlayerStateChange,
+				            'onError': onPlayerError
+				        }
+			});
+			//再検索の時はここは通らない
+			$('#main')
+				.prepend("<div id='movie_title' target='_blank'>"+playerinfo[current][0]+"</div>")
+				.append("<div id='movie_description'>"+playerinfo[current][1]+"</div>");
+		}
+	}
+	
+	// プレイヤが準備できたら呼び出される
+    function onPlayerReady(event) {	
+        event.target.playVideo();		
+		console.log('onPlayerReady');
+    }
+	// ステータスが変更されたら呼び出される
+    function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.ENDED) { //終わったら次の動画。連続再生。
+            playNext();
+        } else if (event.data == YT.PlayerState.PLAYING) {
+            $('#exe').val(" 停止 ");
+        } else if (event.data == YT.PlayerState.PAUSED) {
+            $('#exe').val(" 再生 ");
+        }
+    }
+	// エラーが起きたら次を再生
+    function onPlayerError(event) {
+        playNext();
+    }
+	//検索ボタン
+    $(function(){
+        $('#main_box').hide(); //非表示にする
+        $('form').submit(function(){
+			playlist = []; //動画のプレイリスト
+			playertd = []; //動画タイトル、説明の一時保存
+			playerinfo = []; //動画のタイトル、説明の情報を入れる
+			number = 0; //クリックした曲のインデックス
+			//current = 0; // 現在再生中の曲のインデックス
+			//$("#movie_title").remove(); //タイトルの削除
+			//$("#movie_description").remove(); //動画説明の削除
+			playerReadyFlg = false;
+			playListAddFlg = false;
+			playListFlg = false;
+            var keyword = $('#keyword').val();
+            $('#loading').fadeIn();
+            search(keyword);
+            return false;
+        });
+    });
+	//クリックイベント
+    $(window).load(function(){
+		//戻るボタン
+        $('#prev').on('click',function(){
+            playPrev();
+        });
+		//次へボタン
+        $('#next').on('click',function(){
+            playNext();
+        });
+		//再生ボタン
+        $('#exe').on('click',function(){
+            exe();
+        });
+		
+    });
+	//再生リスト動画をクリック
+	$(function(){
+		//後から追加されたhtmlに対してイベントを行う場合は$(document).on
+		$(document).on('click',".movie_box",function(){
+			var videoId = $(this).attr("name"); //videoIdを取得
+			number = playlist.indexOf(videoId); //対象の動画のプレイリストのインデックス番号
+			//current = number - 1; //playNext関数に渡すためにマイナス１をする
+			console.log("再生リストをクリック");
+	        playClick(); //クリックされた動画を再生する
+	    });
+	});
+    </script>
+    <style>
+    html, body{
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+	.pull-right{
+		margin:0 0 0 auto;
+	}
+	.pull-left{
+		float: left;
+	}
+	.left{
+		float: left;
+		margin-right: 4px;
+	}
+	.highlight{
+		background-color: red;
+		color:#fff;
+	}
+    #container{
+        background-color: #f1f1f1;
+    }
+    #header{
+        padding: 20px;
+        background-color: #fff;
+		float: left;
+		width: 1300px;
+    }
+    #header form{
+        width: 1200px;
+        margin: 0 auto;
+    }
+    #loading{
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        background: url(http://no1s.biz/kenshu/image/loader.gif) no-repeat center center #ccc;
+        opacity: 0.5;
+        z-index: 9999;
+    }
+    #main_box{	
+		background-color: #fffacd;
+        margin: 0 auto;
+        width: 1500px;
+		height: 1200px;
+    }
+	#main{
+        width: 600px;
+        background-color: #fff;
+        margin-top: 20px;
+		margin-left: 50px;
+        padding: 20px;
+    }
+    #movie_title{
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+    #movie_description{
+        font-size: 1em;
+        margin: 20px 0;
+    }
+    #related{
+        background-color: #f1f1f1;
+        margin-top: 20px;
+        margin-left: 40px;
+        width: 500px;
+    }
+    #related table{
+        background-color: #fff;
+    }
+    #related table tr{
+        border-bottom: 3px solid #f1f1f1;
+    }
+    #related td.thum{
+        padding: 10px 10px 20px 10px;
+    }
+    #related td.details{
+        padding: 10px 10px 20px 0;
+        vertical-align: top;
+		width: 400px; /* 再生リストタイトル幅設定 */
+    }
+    </style>
+</head>
+<body>
+  <div id="container">
+    <div id="loading"></div>
+    <div id="header">
+      <form>
+        <input type="text" id="keyword" class="left" value="AKB48" />
+        <input type="submit" value="検索" id="btn"class="left"  disabled="disabled" />
+      </form>
+	    <input type="button" value=" < < " id="prev" class="left"  />
+        <input type="button" value=" 再生 " id="exe" class="left"  />
+        <input type="button" value=" > > " id="next" class="left"  />
+    </div>
+    <div id="main_box" class="clearfix">
+		<div id="main" class="pull-left">
+			
+			<div id="main_movie" ></div>
+			
+		</div>
+        <div id="related" class="pull-left"></div>
+    </div>
+  </div>
+  <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
+</body>
+</html>

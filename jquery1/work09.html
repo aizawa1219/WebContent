@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $('#btn').on('click',function(){
+      $("p a").attr("target", "_blank"); //属性の追加
+    });
+  });
+  </script>
+  <body>
+	<button id="btn">クリック</button>
+	<p class="q09"><a href="#">前田敦子</a></p>
+	<p><a href="#">指原莉乃</a></p>
+	<p class="q09"><a href="#">大島優子</a></p>
+	<p><a href="#">山本彩</a></p>
+	<p class="q09"><a href="#">篠田麻里子</a></p>
+  </body>
+</html>

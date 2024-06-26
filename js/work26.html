@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+// 入力された数値で大きな数値を代入する
+function comprison() {
+	var A = document.getElementById("value_a").value;
+	var B = document.getElementById("value_b").value;
+	if (A > B){
+		document.getElementById("answer").value = A;
+	}else if (A < B){
+		document.getElementById("answer").value = B;
+	}else{
+		document.getElementById("answer").value = A;
+	}
+}
+</script>
+</head>
+<body>
+<table>
+<tr>
+<td><input type="text" id="value_a" size="4"/></td>
+<td><input type="text" id="value_b" size="4"/></td>
+<td><input type="button" id="btn" value="大きい値は？" onclick="comprison();" /></td>
+</tr>
+</table>
+<div>大きい値は：<input type="text" id="answer" /></div>
+</body>
+</html>

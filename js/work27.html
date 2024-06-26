@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<style>
+div {
+  margin: 10px;
+  padding: 10px;
+  width: 50px;
+  height: 50px;
+  border: 1px solid white;
+  line-height: 50px;
+  float:left;
+  text-align: center;
+  color: white;
+}
+#red {background-color: red;}
+#green{background-color: green;}
+#blue{background-color: blue;}
+#black{background-color: black;}
+</style>
+<script>
+function changebg(newColor) {
+	console.log("カーソル乗ってる");
+	document.getElementById("bgcolor").style.backgroundColor = newColor;
+}
+
+function turn(){
+	document.getElementById("bgcolor").style.backgroundColor = '#ffffff';
+}
+
+</script>
+</head>
+<body id="bgcolor">
+<div id="red" onmouseover="changebg('#ff0000');" onmouseout="turn();">赤</div>
+<div id="green" onmouseover="changebg('#008000');" onmouseout="turn();">緑</div>
+<div id="blue" onmouseover="changebg('#0000ff');" onmouseout="turn();">青</div>
+<div id="black" onmouseover="changebg('#000000');" onmouseout="turn();">黒</div>
+</body>
+</html>

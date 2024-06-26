@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $('#btn').on('click',function(){
+      $("#q10").prepend("センター"); 
+	  $("#btn").off("click");//おまけ。2回目以降のクリックは無効。
+    });
+  });
+  </script>
+  <body>
+	<button id="btn">クリック</button>
+	<p id="q10">前田敦子</p>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+// ボタンがクリックされると「data」の文字列をアラートで表示する
+function say() {
+	alert(document.frm.info.value);
+}
+
+function hey() {
+	var word = document.getElementById("data1");
+	alert(word.value);
+}
+</script>
+</head>
+<body>
+<div>
+<form name="frm">
+	<input type="text" id="data" name="info" />
+	<button id="btn" onclick="say();">クリック</button>
+</form>
+<input type="text" id="data1" />
+<button id="btn" onclick="hey();">クリック</button>
+</div>
+</body>
+</html>

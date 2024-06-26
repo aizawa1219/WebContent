@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+// contentsの文字列をtargetにコピーする
+function start() {
+	var contents = document.getElementById("contents");
+	var word = contents.innerText;
+	console.log(word);
+	document.getElementById("target").innerHTML = word;
+}
+</script>
+</head>
+<body>
+<div><input type="button" id="start" value="スタート" onclick="start();"/></div>  
+<div id="contents">こんにちは</div>
+<div id="target"></div>
+</body>
+</html>

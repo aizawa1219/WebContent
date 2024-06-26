@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $('#btn').on('click',function(){
+		$("p[class='q16']").html("<p>xxx</p>"); //置換
+	    $("#btn").off("click");//おまけ。2回目以降のクリックは無効。
+    });
+  });
+  </script>
+  <body>
+	<button id="btn">クリック</button>
+	<p class="q16">前田敦子</p>
+	<p>指原莉乃</p>
+	<p class="q16">大島優子</p>
+	<p>山本彩</p>
+	<p class="q16">篠田麻里子</p>
+  </body>
+</html>

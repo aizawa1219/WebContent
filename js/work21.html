@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ワーク</title>
+<script>
+// 「メッセージ」に入力した文字列を「繰り返し回数」だけ繰り返した文字列を代入する
+function repeat() {
+	//id=result要素の取得
+	var result = document.getElementById("result");
+	
+	//メッセージのvalueを取り出す
+	var message = document.getElementById("message");
+	var word = message.value;
+	
+	//繰り返し回数のvalueを取り出し、int型に変換
+	var loop = document.getElementById("loop");
+	var numbers = parseInt(loop.value);
+	
+	//変数wordsに繰り返し文字を入れる
+	var i = 0;
+	var words = "";
+	while(i < numbers){
+		words += word;
+		words += "<br>";
+		i++;
+	}
+	document.getElementById("result").innerHTML = words;
+	console.log(words);
+	
+}
+</script>
+</head>
+<body>
+<div>メッセージ<input type="text" id="message" /></div>
+<div>繰り返し回数<input type="text" id="loop" /></div>
+<div><input type="button" id="start" value="スタート" onclick="repeat();"/></div>
+<div id="result"></div>
+</body>
+</html>

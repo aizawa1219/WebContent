@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $('#btn').on('click',function(){
+		$("input[type='text']").val("大島優子"); //入力値の変更
+    });
+  });
+  </script>
+  <body>
+	<button id="btn">クリック</button>
+	<form>
+	  <input type="text" value="前田敦子">
+	</form>
+	  
+  </body>
+</html>

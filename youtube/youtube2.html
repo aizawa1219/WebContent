@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Youtube</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>
+    var apiKey = 'AIzaSyB5mSNY37Nnwo2AEqk8HQmQgA8DFIxxHzY'; // 自分のapiKeyを入れる
+    var googleApiClientReady = function(){ //どのタイミングでこの関数は実行されるの？
+        init();
+    }
+    var init = function() {
+        $('#btn').attr('disabled', false); //ボタンを活性化にしている
+    }
+    var search = function(keyword){
+		//APIキーの設定
+        gapi.client.setApiKey(apiKey);
+		//第1引数にはAPI名、第2引数にはAPIのバージョン、第3引数にはAPIロード後に実行されるコールバック関数を指定
+        gapi.client.load('youtube', 'v3', function() {
+        });
+        var request = gapi.client.request({
+            'path': '/youtube/v3/search',
+            'params': {
+                'q': keyword,
+                'type': 'video',
+                'part': 'snippet',
+            }
+        });
+        request.execute(function(data) {
+            console.log(data);
+            if (!data.items) return;
+            $('#main').text('');
+            $('#main').append('<table>');
+            for(var i in data.items){
+                if(data.items[i].id.videoId && 
+                   data.items[i].id.kind=="youtube#video"){
+                    console.log(data.items[i].id.videoId);
+                    movie = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + data.items[i].id.videoId + '" frameborder="0"></iframe>';
+                    $('#main table').append(
+						'<tr class="movie_box">' + 
+                        '<td class="thum">' + movie + '</td>' +
+                        '<td class="details">' + 
+                        '<a href="https://www.youtube.com/watch?v=' + data.items[i].id.videoId + '" target="_blank">' + data.items[i].snippet.title + '</a><br />' + 
+                        '<span class="description">' + data.items[i].snippet.description + '</span>' +
+                        '</td>'+ 
+                        '</tr>');
+                }
+            }
+            $('#loading').fadeOut();
+        });
+    }
+	//送信ボタンが押されるとまず最初にこの処理にくる。.submitされた時の処理。
+    $(function(){
+        $('form').submit(function(){
+            var keyword = $('#keyword').val(); //検索ワードの取得
+            $('#loading').fadeIn(); //ゆっくりとローディングgif画像を表示
+            search(keyword); //検索ワードを引数としてsearch関数を実行。これは非同期処理？通信？。
+            return false; //送信の非活性化。
+        });
+    });
+    </script>
+    <style>
+    html, body{
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    #container{
+        padding: 20px;
+    }
+    #loading{
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height: 100%;
+        background: url(http://no1s.biz/kenshu/image/loader.gif) no-repeat center center #ccc;
+        opacity: 0.5;
+        z-index: 9999;
+    }
+    table, tr, td{
+        border-collapse: collapse;
+        border: 1px solid #ffccde;
+        padding: 10px;
+        margin: 10px 0;
+    }
+    .movie_box{}
+    .thum{
+        width: 560px;
+		background-color: #ffe0f2;
+    }
+    .details{
+        vertical-align: top;
+        font-size: 1.5em;  
+    }
+    .description{
+        font-size: 0.5em;
+    }
+    </style>
+</head>
+<body>
+    <div id="container"> <!-- containerはcss -->
+        <div id="loading"></div> <!-- loadingはcss。gif画像が入っている -->
+        <div id="header"> <!-- headerはここでは特に指定ない -->
+            <form> <!-- formタグの間の情報を送信 -->
+                <input type="text" id="keyword" value="AKB48" />
+				<!-- disabledは非活性化。つまりボタンの無効化。jQueryで切り替えが行われる。 -->
+                <input type="submit" value="検索" id="btn" disabled="disabled" />
+            </form>
+        </div>
+        <div id="main"></div> <!-- ここに検索結果が表示されると思う -->
+    </div>
+    <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
+</body>
+</html>

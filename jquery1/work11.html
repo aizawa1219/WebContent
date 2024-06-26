@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+  <title>jQuery</title>
+  <meta http-equiv=”Content-Script-Type” content=”text/javascript” charset="utf-8">
+  <script src="//code.jquery.com/jquery-2.2.4.js"></script>
+  <script type="text/javascript">
+  $(function(){
+    $('#btn').on('click',function(){
+      $("#q11").append("、SKE48、NMB48、HKT48"); 
+	  $("#btn").off("click");//おまけ。2回目以降のクリックは無効。
+    });
+  });
+  </script>
+  <body>
+	<button id="btn">クリック</button>
+	<p id="q11">AKB48</p>
+  </body>
+</html>
